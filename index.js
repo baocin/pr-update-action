@@ -111,6 +111,7 @@ async function run() {
       core.warning('No updates were made to PR title');
     }
 
+    core.info(`Original branch names: ${baseBranchName} to ${headBranchName}`);
     const body = github.context.payload.pull_request.body || '';
     const processedBodyText = inputs.bodyTemplate
       .replace(baseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, matches.baseMatch))

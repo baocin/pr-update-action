@@ -1303,8 +1303,6 @@ async function run() {
     const processedTitleText = inputs.titleTemplate
       .replace(baseTokenRegex, upperCase(inputs.titleUppercaseBaseMatch, matches.baseMatch))
       .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch))
-      .replace(originalBaseTokenRegex, baseBranchName)
-      .replace(originalHeadTokenRegex, headBranchName);
     core.info(`Processed title text: ${processedTitleText}`);
 
     const updateTitle = ({
@@ -1326,10 +1324,13 @@ async function run() {
       core.warning('No updates were made to PR title');
     }
 
+    core.info(`Original branch names (dist): ${baseBranchName} to ${headBranchName}`);
     const body = github.context.payload.pull_request.body || '';
     const processedBodyText = inputs.bodyTemplate
       .replace(baseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, matches.baseMatch))
-      .replace(headTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, matches.headMatch));
+      .replace(headTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, matches.headMatch))
+      .replace(originalBaseTokenRegex, baseBranchName)
+      .replace(originalHeadTokenRegex, headBranchName);
     core.info(`Processed body text: ${processedBodyText}`);
 
     const updateBody = ({
