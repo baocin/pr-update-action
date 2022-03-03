@@ -1217,6 +1217,8 @@ async function run() {
   try {
     const baseTokenRegex = new RegExp('%basebranch%', "g");
     const headTokenRegex = new RegExp('%headbranch%', "g");
+    const originalBaseTokenRegex = new RegExp('%originalbasebranchname%', "g");
+    const originalHeadTokenRegex = new RegExp('%originalheadbranchname%', "g");
 
     const inputs = {
       token: core.getInput('repo-token', {required: true}),
@@ -1251,6 +1253,8 @@ async function run() {
       headMatch: '',
     }
 
+    const baseBranchName = github.context.payload.pull_request.base.ref;
+    core.setOutput('originalBaseBranchName', baseBranchName);
     if (matchBaseBranch) {
       const baseBranchName = github.context.payload.pull_request.base.ref;
       const baseBranch = inputs.lowercaseBranch ? baseBranchName.toLowerCase() : baseBranchName;
@@ -1268,6 +1272,8 @@ async function run() {
       core.setOutput('baseMatch', matches.baseMatch);
     }
 
+    const headBranchName = github.context.payload.pull_request.head.ref;
+    core.setOutput('originalHeadBranchName', headBranchName);
     if (matchHeadBranch) {
       const headBranchName = github.context.payload.pull_request.head.ref;
       const headBranch = inputs.lowercaseBranch ? headBranchName.toLowerCase() : headBranchName;
@@ -1296,7 +1302,9 @@ async function run() {
     const title = github.context.payload.pull_request.title || '';
     const processedTitleText = inputs.titleTemplate
       .replace(baseTokenRegex, upperCase(inputs.titleUppercaseBaseMatch, matches.baseMatch))
-      .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch));
+      .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch))
+      .replace(originalBaseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, baseBranchName))
+      .replace(originalHeadTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, headBranchName));
     core.info(`Processed title text: ${processedTitleText}`);
 
     const updateTitle = ({
