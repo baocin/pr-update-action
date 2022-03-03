@@ -115,8 +115,8 @@ async function run() {
     const processedBodyText = inputs.bodyTemplate
       .replace(baseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, matches.baseMatch))
       .replace(headTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, matches.headMatch))
-      .replace(originalBaseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, baseBranchName))
-      .replace(originalHeadTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, headBranchName));
+      .replace(originalBaseTokenRegex, baseBranchName)
+      .replace(originalHeadTokenRegex, headBranchName);
     core.info(`Processed body text: ${processedBodyText}`);
 
     const updateBody = ({

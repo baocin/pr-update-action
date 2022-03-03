@@ -1303,8 +1303,8 @@ async function run() {
     const processedTitleText = inputs.titleTemplate
       .replace(baseTokenRegex, upperCase(inputs.titleUppercaseBaseMatch, matches.baseMatch))
       .replace(headTokenRegex, upperCase(inputs.titleUppercaseHeadMatch, matches.headMatch))
-      .replace(originalBaseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, baseBranchName))
-      .replace(originalHeadTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, headBranchName));
+      .replace(originalBaseTokenRegex, baseBranchName)
+      .replace(originalHeadTokenRegex, headBranchName);
     core.info(`Processed title text: ${processedTitleText}`);
 
     const updateTitle = ({
