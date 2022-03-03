@@ -5,6 +5,8 @@ async function run() {
   try {
     const baseTokenRegex = new RegExp('%basebranch%', "g");
     const headTokenRegex = new RegExp('%headbranch%', "g");
+    const originalBaseTokenRegex = new RegExp('%originalbasebranchname%', "g");
+    const originalHeadTokenRegex = new RegExp('%originalheadbranchname%', "g");
 
     const inputs = {
       token: core.getInput('repo-token', {required: true}),
@@ -39,8 +41,9 @@ async function run() {
       headMatch: '',
     }
 
+    const baseBranchName = github.context.payload.pull_request.base.ref;
+    core.setOutput('originalBaseBranchName', baseBranchName);
     if (matchBaseBranch) {
-      const baseBranchName = github.context.payload.pull_request.base.ref;
       const baseBranch = inputs.lowercaseBranch ? baseBranchName.toLowerCase() : baseBranchName;
       core.info(`Base branch: ${baseBranch}`);
 
@@ -56,8 +59,10 @@ async function run() {
       core.setOutput('baseMatch', matches.baseMatch);
     }
 
+
+    const headBranchName = github.context.payload.pull_request.head.ref;
+    core.setOutput('originalHeadBranchName', headBranchName);
     if (matchHeadBranch) {
-      const headBranchName = github.context.payload.pull_request.head.ref;
       const headBranch = inputs.lowercaseBranch ? headBranchName.toLowerCase() : headBranchName;
       core.info(`Head branch: ${headBranch}`);
 
@@ -109,7 +114,9 @@ async function run() {
     const body = github.context.payload.pull_request.body || '';
     const processedBodyText = inputs.bodyTemplate
       .replace(baseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, matches.baseMatch))
-      .replace(headTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, matches.headMatch));
+      .replace(headTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, matches.headMatch))
+      .replace(originalBaseTokenRegex, upperCase(inputs.bodyUppercaseBaseMatch, baseBranchName))
+      .replace(originalHeadTokenRegex, upperCase(inputs.bodyUppercaseHeadMatch, headBranchName));
     core.info(`Processed body text: ${processedBodyText}`);
 
     const updateBody = ({
