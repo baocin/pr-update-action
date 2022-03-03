@@ -8,6 +8,8 @@ jobs:
     outputs:
       baseMatch: ${{ steps.update_pr.outputs.baseMatch }}
       headMatch: ${{ steps.update_pr.outputs.headMatch }}
+      originalHeadBranchName: ${{ steps.update_pr.outputs.originalHeadBranchName }}
+      originalBaseBranchName: ${{ steps.update_pr.outputs.originalBaseBranchName }}
       titleUpdated: ${{ steps.update_pr.outputs.titleUpdated }}
       bodyUpdated: ${{ steps.update_pr.outputs.bodyUpdated }}
     steps:
@@ -25,5 +27,7 @@ jobs:
       - run: |
           echo 'baseMatch:' ${{needs.update_pr.outputs.baseMatch}}
           echo 'headMatch:' ${{needs.update_pr.outputs.headMatch}}
+          echo 'originalHeadBranchName:' ${{needs.update_pr.outputs.originalHeadBranchName}}
+          echo 'originalBaseBranchName:' ${{needs.update_pr.outputs.originalBaseBranchName}}
           echo 'titleUpdated:' ${{needs.update_pr.outputs.titleUpdated}}
           echo 'bodyUpdated:' ${{needs.update_pr.outputs.bodyUpdated}}
